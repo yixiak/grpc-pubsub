@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+// Interface between pub/sub server and publisher, subscriber
+service pubsub{
+    // subscriber require for the list of theme
+    rpc getTheme(Request) returns(themeList){}
+
+    //  subsciber subscribe the theme
+    //  two themes will be the same if successful
+    rpc subscribe(theme) returns(theme){}
+
+    // publisher create a theme
+    //  two themes will be the same if successful
+    rpc createTheme(theme) returns(theme){}
+
+    // publisher publish a message 
+    rpc publish(pub) returns(theme) {}
+}
+
+message Request{
+
+}
+
+message themeList {
+    repeated int32 theme_index=1;
+}
+
+message theme {
+    int32 theme_index=1;
+}
+
+message pub {
+    theme theme_index=1;
+    string text=2;
+}

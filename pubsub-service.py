@@ -46,6 +46,10 @@ class pubsubServicer(pubsub_pb2_grpc.pubsubServicer):
         """publisher create a theme
         two themes will be the same if successful
         """
+        theme = request.theme_index
+        self.themeList[theme]=[]
+        return pubsub_pb2.theme(theme_index=theme)
+        
         pass
 
     def publish(self, request, context):

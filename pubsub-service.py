@@ -15,12 +15,14 @@ class pubsubServicer(pubsub_pb2_grpc.pubsubServicer):
     def __init__(self):
         # stores the lists of a topic's subscribers
         self.subscribers = {}
+        
+        # the list of theme created
+        self.themeList=[]
     
     def getTheme(self, request, context):
-        themelist=pubsub_pb2.themeList()
+        response=pubsub_pb2.themeList(theme_index=[i for i in self.themeList])
         
-        
-        return pubsub_pb2.themeList()
+        return response
 
     def subscribe(self, request, context):
         """subsciber subscribe the theme

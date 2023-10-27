@@ -10,6 +10,7 @@ import subprocess
 import grpc
 import pubsub_pb2
 import pubsub_pb2_grpc
+from concurrent import futures
 
 class pubsubServicer(pubsub_pb2_grpc.pubsubServicer):
     def __init__(self):
@@ -64,4 +65,13 @@ class pubsubServicer(pubsub_pb2_grpc.pubsubServicer):
                 
         return pubsub_pb2.theme(theme_index=theme)
         
-        
+def server():
+    server=grpc.server(futures.ThreadPoolExecutor(max_workers=4))
+    
+    pubsub_pb2_grpc.add_pubsubServicer_to_server(pubsubServicer(),server)
+    server.add_insecure_port("localhost:50052")
+    server.start()
+    server.wait_for_termination()
+
+if __name__=="__main__":
+    server()

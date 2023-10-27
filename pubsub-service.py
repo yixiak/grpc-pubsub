@@ -25,8 +25,9 @@ class pubsubServicer(pubsub_pb2_grpc.pubsubServicer):
         return response
 
     def subscribe(self, request, context):
-        """subsciber subscribe the theme
-        two themes will be the same if successful
+        """ 
+            subsciber subscribe the theme
+            two themes will be the same if successful
         """
         
         theme_index = request.theme_index
@@ -48,6 +49,6 @@ class pubsubServicer(pubsub_pb2_grpc.pubsubServicer):
         pass
 
     def publish(self, request, context):
-        """publisher publish a message 
+        """publisher publish a message to server
         """
         pass

@@ -47,8 +47,10 @@ class pubsubServicer(pubsub_pb2_grpc.pubsubServicer):
         """publisher create a theme
         two themes will be the same if successful
         """
+        print("enter createTheme")
         theme = request.theme_index
-        self.themeList[theme]=[]
+        self.themeList.append(theme)
+        self.subscribers[theme]=[]
         return pubsub_pb2.theme(theme_index=theme)
         
         pass
@@ -56,7 +58,7 @@ class pubsubServicer(pubsub_pb2_grpc.pubsubServicer):
     def publish(self, request, context):
         """publisher publish a message to server
         """
-        theme = request.theme_index
+        theme = request.theme_index.theme_index
         message = request.text
         
         if theme in self.subscribers:

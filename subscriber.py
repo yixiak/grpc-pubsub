@@ -12,7 +12,7 @@ import pubsub_pb2
 import pubsub_pb2_grpc
 
 def subscribe(theme_index):
-    channel = grpc.insecure_channel('localhost:50051')
+    channel = grpc.insecure_channel('localhost:50052')
     client = pubsub_pb2_grpc.pubsubStub(channel)
     
     request = pubsub_pb2.theme(theme_index=theme_index)
@@ -24,7 +24,7 @@ def subscribe(theme_index):
         print(f"Failed to subscribe to {theme_index}")
         
 def getTheme():
-    channel = grpc.insecure_channel('localhost:50051')
+    channel = grpc.insecure_channel('localhost:50052')
     client = pubsub_pb2_grpc.pubsubStub(channel)
     request = pubsub_pb2.Request()
     
@@ -33,3 +33,9 @@ def getTheme():
         print(f"get the theme list: {response}")
     else:
         print(f"Failed")
+
+def run():
+    getTheme()
+    subscribe(1)
+    
+run()

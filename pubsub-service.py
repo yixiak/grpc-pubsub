@@ -51,4 +51,13 @@ class pubsubServicer(pubsub_pb2_grpc.pubsubServicer):
     def publish(self, request, context):
         """publisher publish a message to server
         """
-        pass
+        theme = request.theme_index
+        message = request.text
+        
+        if theme in self.subscribers:
+            for subscriber in self.subscribers[theme]:
+                subscriber.send(request)
+                
+        return pubsub_pb2.theme(theme_index=theme)
+        
+        

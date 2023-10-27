@@ -12,6 +12,9 @@ import pubsub_pb2
 import pubsub_pb2_grpc
 
 class pubsubServicer(pubsub_pb2_grpc.pubsubServicer):
+    def __init__(self):
+        # stores the lists of a topic's subscribers
+        self.subscribers = {}
     
     def getTheme(self, request, context):
         themelist=pubsub_pb2.themeList()
@@ -23,7 +26,18 @@ class pubsubServicer(pubsub_pb2_grpc.pubsubServicer):
         """subsciber subscribe the theme
         two themes will be the same if successful
         """
-        pass
+        
+        theme_index = request.theme_index
+        # there is no such a theme
+        # return -1 for fail
+        if theme_index not in self.subscribers:
+            response = pubsub_pb2.theme(theme_index=-1)
+            
+        # add this client into subscribers list
+        else:
+            self.subscribers[theme_index].append(context)
+            response = pubsub_pb2.theme(theme_index=theme_index)
+        return response
 
     def createTheme(self, request, context):
         """publisher create a theme

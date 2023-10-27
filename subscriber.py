@@ -22,3 +22,14 @@ def subscribe(theme_index):
         print(f"Subscribe to {theme_index} successfully")
     else:
         print(f"Failed to subscribe to {theme_index}")
+        
+def getTheme():
+    channel = grpc.insecure_channel('localhost:50051')
+    client = pubsub_pb2_grpc.pubsubStub(channel)
+    request = pubsub_pb2.Request()
+    
+    response = client.getTheme(request)
+    if response:
+        print(f"get the theme list: {response}")
+    else:
+        print(f"Failed")

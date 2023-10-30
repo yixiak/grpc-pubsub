@@ -41,15 +41,15 @@ class pubsubServicer(pubsub_pb2_grpc.pubsubServicer):
         # there is no such a theme
         # return -1 for fail
         if theme_index not in self.themeList:
-            response = pubsub_pb2.theme(theme_index=-1)
+            response =pubsub_pb2.sub(theme_index=pubsub_pb2.theme(theme_index=-1),text=message)
             logging.info('there is no such theme')
         # add this client into subscribers list
         else:
             if self.message[theme_index].empty():
-                response = pubsub_pb2.theme(theme_index=-1)
+                response = pubsub_pb2.sub(theme_index=pubsub_pb2.theme(theme_index=-1),text=message)
             else:
                 message=self.message[theme_index].get()
-                response = pubsub_pb2.sub(theme_index=pubsub_pb2.theme(theme_index),text=message)
+                response = pubsub_pb2.sub(theme_index=pubsub_pb2.theme(theme_index=theme_index),text=message)
         return response
 
     def createTheme(self, request, context):
@@ -68,11 +68,13 @@ class pubsubServicer(pubsub_pb2_grpc.pubsubServicer):
     def publish(self, request, context):
         """publisher publish a message to server
         """
+        logging.info("enter publish")
         theme = request.theme_index.theme_index
         message = request.text
         
         if theme in self.message:
             self.message[theme].put(message)
+            logging.info(f"add message {message} into theme {theme}")
                 
         return pubsub_pb2.theme(theme_index=theme)
         

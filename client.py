@@ -17,7 +17,7 @@ def subscribe(stub, theme_index):
     request = pubsub_pb2.theme(theme_index=theme_index)
     response = stub.subscribe(request)
     
-    if response and response.theme_index==theme_index:
+    if response and response.theme_index.theme_index==theme_index:
         logging.info(f"Subscribe to {theme_index} successfully")
         logging.info(f"theme {theme_index}: {response.text}")
     else:

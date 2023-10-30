@@ -23,7 +23,7 @@ class pubsubStub(object):
         self.subscribe = channel.unary_unary(
                 '/pubsub/subscribe',
                 request_serializer=pubsub__pb2.theme.SerializeToString,
-                response_deserializer=pubsub__pb2.theme.FromString,
+                response_deserializer=pubsub__pb2.sub.FromString,
                 )
         self.createTheme = channel.unary_unary(
                 '/pubsub/createTheme',
@@ -82,7 +82,7 @@ def add_pubsubServicer_to_server(servicer, server):
             'subscribe': grpc.unary_unary_rpc_method_handler(
                     servicer.subscribe,
                     request_deserializer=pubsub__pb2.theme.FromString,
-                    response_serializer=pubsub__pb2.theme.SerializeToString,
+                    response_serializer=pubsub__pb2.sub.SerializeToString,
             ),
             'createTheme': grpc.unary_unary_rpc_method_handler(
                     servicer.createTheme,
@@ -135,7 +135,7 @@ class pubsub(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/pubsub/subscribe',
             pubsub__pb2.theme.SerializeToString,
-            pubsub__pb2.theme.FromString,
+            pubsub__pb2.sub.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

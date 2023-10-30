@@ -28,3 +28,11 @@ class pub(_message.Message):
     theme_index: theme
     text: str
     def __init__(self, theme_index: _Optional[_Union[theme, _Mapping]] = ..., text: _Optional[str] = ...) -> None: ...
+
+class sub(_message.Message):
+    __slots__ = ["theme_index", "text"]
+    THEME_INDEX_FIELD_NUMBER: _ClassVar[int]
+    TEXT_FIELD_NUMBER: _ClassVar[int]
+    theme_index: theme
+    text: str
+    def __init__(self, theme_index: _Optional[_Union[theme, _Mapping]] = ..., text: _Optional[str] = ...) -> None: ...

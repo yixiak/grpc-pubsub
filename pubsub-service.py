@@ -13,6 +13,8 @@ import pubsub_pb2
 import pubsub_pb2_grpc
 from concurrent import futures
 
+logging.basicConfig(level=logging.INFO)
+
 class pubsubServicer(pubsub_pb2_grpc.pubsubServicer):
     def __init__(self):
         # stores the lists of a topic's subscribers
@@ -34,27 +36,27 @@ class pubsubServicer(pubsub_pb2_grpc.pubsubServicer):
             subsciber subscribe the theme
             two themes will be the same if successful
         """
-        
+        logging.info('enter subscribe')
         theme_index = request.theme_index
         # there is no such a theme
         # return -1 for fail
         if theme_index not in self.themeList:
             response = pubsub_pb2.theme(theme_index=-1)
-            
+            logging.info('there is no such theme')
         # add this client into subscribers list
         else:
             if self.message[theme_index].empty():
                 response = pubsub_pb2.theme(theme_index=-1)
             else:
                 message=self.message[theme_index].get()
-                response = pubsub_pb2.sub(theme_index=theme_index,text=message)
+                response = pubsub_pb2.sub(theme_index=pubsub_pb2.theme(theme_index),text=message)
         return response
 
     def createTheme(self, request, context):
         """publisher create a theme
         two themes will be the same if successful
         """
-        print("enter createTheme")
+        logging.info("enter createTheme")
         theme = request.theme_index
         self.themeList.append(theme)
         self.subscribers[theme]=[]

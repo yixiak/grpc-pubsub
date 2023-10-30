@@ -7,6 +7,7 @@ import asyncio
 import logging
 import subprocess
 
+import queue
 import grpc
 import pubsub_pb2
 import pubsub_pb2_grpc
@@ -19,6 +20,9 @@ class pubsubServicer(pubsub_pb2_grpc.pubsubServicer):
         
         # the list of theme created
         self.themeList=[]
+        
+        # store the message list of each theme
+        self.message={}
     
     def getTheme(self, request, context):
         response=pubsub_pb2.themeList(theme_index=[i for i in self.themeList])
@@ -34,13 +38,16 @@ class pubsubServicer(pubsub_pb2_grpc.pubsubServicer):
         theme_index = request.theme_index
         # there is no such a theme
         # return -1 for fail
-        if theme_index not in self.subscribers:
+        if theme_index not in self.themeList:
             response = pubsub_pb2.theme(theme_index=-1)
             
         # add this client into subscribers list
         else:
-            self.subscribers[theme_index].append(context)
-            response = pubsub_pb2.theme(theme_index=theme_index)
+            if self.message[theme_index].empty():
+                response = pubsub_pb2.theme(theme_index=-1)
+            else:
+                message=self.message[theme_index].get()
+                response = pubsub_pb2.sub(theme_index=theme_index,text=message)
         return response
 
     def createTheme(self, request, context):
@@ -51,6 +58,7 @@ class pubsubServicer(pubsub_pb2_grpc.pubsubServicer):
         theme = request.theme_index
         self.themeList.append(theme)
         self.subscribers[theme]=[]
+        self.message[theme]=queue.Queue()
         return pubsub_pb2.theme(theme_index=theme)
         
         pass
@@ -61,9 +69,8 @@ class pubsubServicer(pubsub_pb2_grpc.pubsubServicer):
         theme = request.theme_index.theme_index
         message = request.text
         
-        if theme in self.subscribers:
-            for subscriber in self.subscribers[theme]:
-                subscriber.send(request)
+        if theme in self.message:
+            self.message[theme].put(message)
                 
         return pubsub_pb2.theme(theme_index=theme)
         

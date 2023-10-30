@@ -12,6 +12,26 @@ import grpc
 import pubsub_pb2
 import pubsub_pb2_grpc
 
+
+def subscribe(stub, theme_index):
+    request = pubsub_pb2.theme(theme_index=theme_index)
+    response = stub.subscribe(request)
+    
+    if response and response.theme_index==theme_index:
+        print(f"Subscribe to {theme_index} successfully")
+    else:
+        print(f"Failed to subscribe to {theme_index}")
+        
+def getTheme(stub):
+
+    request = pubsub_pb2.Request()
+    
+    response = stub.getTheme(request)
+    if response:
+        print(f"get the theme list: {response}")
+    else:
+        print(f"Failed")
+
 def createTheme(stub,theme):
     request = pubsub_pb2.theme(theme_index=theme)
     response = stub.createTheme(request)

@@ -7,7 +7,7 @@ service pubsub{
 
     //  subsciber subscribe the theme
     //  two themes will be the same if successful
-    rpc subscribe(theme) returns(theme){}
+    rpc subscribe(theme) returns(sub){}
 
     // publisher create a theme
     //  two themes will be the same if successful
@@ -30,6 +30,10 @@ message theme {
 }
 
 message pub {
+    theme theme_index=1;
+    string text=2;
+}
+message sub {
     theme theme_index=1;
     string text=2;
 }
